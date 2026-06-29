@@ -150,11 +150,25 @@ export const fetchUserAudit = async (username) => {
       fetchProfileReadme(username),
     ]);
 
-    const candidates = allRepos
-      .filter((r) => !r.fork && !r.archived)
-      .sort((a, b) => b.stargazers_count - a.stargazers_count || new Date(b.pushed_at).getTime() - new Date(a.pushed_at).getTime());
+    const candidates = allRepos.filter((r) => !r.fork && !r.archived);
     
-    const toAnalyze = candidates.slice(0, 25);
+    // Hybrid selection: Top 15 by stars, and fill the remaining 10 slots with the most recently updated repos
+    const sortedByStars = [...candidates].sort(
+      (a, b) => b.stargazers_count - a.stargazers_count || new Date(b.pushed_at).getTime() - new Date(a.pushed_at).getTime()
+    );
+    const sortedByRecent = [...candidates].sort(
+      (a, b) => new Date(b.pushed_at).getTime() - new Date(a.pushed_at).getTime()
+    );
+
+    const topStars = sortedByStars.slice(0, 15);
+    const toAnalyze = [...topStars];
+
+    for (const repo of sortedByRecent) {
+      if (toAnalyze.length >= 25) break;
+      if (!toAnalyze.some((r) => r.id === repo.id)) {
+        toAnalyze.push(repo);
+      }
+    }
 
     const concurrency = 5;
     const results = [];
