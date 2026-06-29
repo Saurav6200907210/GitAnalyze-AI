@@ -1,7 +1,7 @@
 import type { GhUser } from "@/lib/types";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+
 import { MapPin, Link as LinkIcon, Calendar, Twitter, Building2 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -73,9 +73,6 @@ export function ProfileHeader({
           </div>
 
           <div className="flex flex-col items-end gap-2 text-xs text-muted-foreground">
-            <Badge variant="outline" className="font-mono">
-              API: {rateLimit.remaining}/{rateLimit.limit} left
-            </Badge>
             <span>Audited {new Date(fetchedAt).toLocaleString()}</span>
           </div>
         </div>
