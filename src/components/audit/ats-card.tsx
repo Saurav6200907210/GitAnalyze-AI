@@ -26,7 +26,7 @@ export function AtsCard({ ats }: { ats: AuditResult["atsScore"] }) {
                 <span className="text-muted-foreground">{b.label}</span>
                 <span className="font-mono tabular-nums">{b.points} / {b.max}</span>
               </div>
-              <Progress value={(b.points / b.max) * 100} />
+              <Progress value={(b.points / b.max) * 100} aria-label={`${b.label} details`} />
             </div>
           ))}
         </div>

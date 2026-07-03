@@ -33,7 +33,7 @@ function Section({ title, items }: { title: string; items: CF[] }) {
                 {c.score}%
               </span>
             </div>
-            <Progress value={c.score} className="mt-2" />
+            <Progress value={c.score} className="mt-2" aria-label={`${c.company} fit percentage`} />
             <div className="mt-3">
               <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Why</p>
               <ul className="mt-1 space-y-0.5 text-xs text-muted-foreground">

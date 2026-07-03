@@ -57,7 +57,14 @@ const SUGGESTIONS = ["torvalds", "gaearon", "tj", "sindresorhus", "yyx990803"];
 
 export default function Landing() {
   const [value, setValue] = useState("");
-  const [recent, setRecent] = useState<string[]>([]);
+  const [recent, setRecent] = useState<string[]>(() => {
+    try {
+      const raw = localStorage.getItem("gp-recent");
+      return raw ? JSON.parse(raw) : [];
+    } catch {
+      return [];
+    }
+  });
   const [activeTab, setActiveTab] = useState<"overview" | "repos" | "career" | "roadmap">("overview");
   const navigate = useNavigate();
   const { scrollY } = useScroll();
@@ -70,16 +77,9 @@ export default function Landing() {
     if (metaDesc) {
       metaDesc.setAttribute(
         "content",
-        "Audit any public GitHub profile in seconds. Real-data scoring, repository health, career readiness, company-fit, 30/60/90 roadmap and an exportable PDF report."
+        "Audit any public GitHub profile in seconds. Get real-data scoring, repository health audits, career readiness matching, and a 30/60/90 roadmap."
       );
     }
-  }, []);
-
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem("gp-recent");
-      if (raw) setRecent(JSON.parse(raw));
-    } catch {}
   }, []);
 
   function go(username: string) {
@@ -174,17 +174,19 @@ export default function Landing() {
           className="mx-auto mt-10 flex max-w-2xl flex-col gap-3 sm:flex-row"
         >
           <div className="glass relative flex flex-1 items-center rounded-xl pl-4 transition focus-within:border-primary/60 focus-within:shadow-glow font-normal font-normal">
-            <Github className="size-5 shrink-0 text-muted-foreground" />
+            <Github className="size-5 shrink-0 text-muted-foreground" aria-hidden="true" />
             <Input
               value={value}
               onChange={(e) => setValue(e.target.value)}
               placeholder="github.com/torvalds  or  torvalds"
+              id="github-username-input"
+              aria-label="GitHub username or profile URL"
               className="border-0 bg-transparent text-base shadow-none focus-visible:ring-0"
             />
           </div>
           <Button type="submit" size="lg" className="h-12 gap-2 px-6 text-base font-semibold hover-scale">
             Audit profile
-            <ArrowRight className="size-4" />
+            <ArrowRight className="size-4" aria-hidden="true" />
           </Button>
         </motion.form>
 
@@ -199,6 +201,7 @@ export default function Landing() {
             <button
               key={u}
               onClick={() => go(u)}
+              aria-label={`Audit username ${u}`}
               className="rounded-full border bg-card/60 px-3 py-1 transition hover:-translate-y-0.5 hover:border-primary/40 hover:text-foreground cursor-pointer"
             >
               @{u}
@@ -247,17 +250,21 @@ export default function Landing() {
 
         <SectionHeader eyebrow="Live preview" title="A peek inside the report" subtitle="Tap a tab to see what each module looks like." />
 
-        <div className="mt-10 flex flex-wrap justify-center gap-2">
+        <div className="mt-10 flex flex-wrap justify-center gap-2" role="tablist" aria-label="Report previews">
           {(
             [
-              { id: "overview", label: "Overview", icon: <Gauge className="size-3.5" /> },
-              { id: "repos", label: "Repositories", icon: <GitBranch className="size-3.5" /> },
-              { id: "career", label: "Career", icon: <Briefcase className="size-3.5" /> },
-              { id: "roadmap", label: "Roadmap", icon: <CalendarRange className="size-3.5" /> },
+              { id: "overview", label: "Overview", icon: <Gauge className="size-3.5" aria-hidden="true" /> },
+              { id: "repos", label: "Repositories", icon: <GitBranch className="size-3.5" aria-hidden="true" /> },
+              { id: "career", label: "Career", icon: <Briefcase className="size-3.5" aria-hidden="true" /> },
+              { id: "roadmap", label: "Roadmap", icon: <CalendarRange className="size-3.5" aria-hidden="true" /> },
             ] as const
           ).map((t) => (
             <button
               key={t.id}
+              id={`tab-${t.id}`}
+              role="tab"
+              aria-selected={activeTab === t.id}
+              aria-controls={`tabpanel-${t.id}`}
               onClick={() => setActiveTab(t.id)}
               className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-1.5 text-xs font-semibold transition cursor-pointer ${
                 activeTab === t.id
@@ -273,6 +280,9 @@ export default function Landing() {
 
         <motion.div
           key={activeTab}
+          id={`tabpanel-${activeTab}`}
+          role="tabpanel"
+          aria-labelledby={`tab-${activeTab}`}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.25 }}
@@ -478,6 +488,7 @@ function PreviewOverview() {
                 paddingAngle={3}
                 onMouseEnter={(_, i) => setHovered(langs[i].name)}
                 onMouseLeave={() => setHovered(null)}
+                isAnimationActive={false}
               >
                 {langs.map((l) => (
                   <Cell
@@ -518,7 +529,7 @@ function PreviewOverview() {
             <RadarChart data={radar}>
               <PolarGrid stroke="var(--border)" />
               <PolarAngleAxis dataKey="axis" tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} />
-              <Radar dataKey="v" stroke="var(--chart-1)" fill="var(--chart-1)" fillOpacity={0.35} animationDuration={1200} />
+              <Radar dataKey="v" stroke="var(--chart-1)" fill="var(--chart-1)" fillOpacity={0.35} isAnimationActive={false} />
               <Tooltip contentStyle={{ background: "var(--popover)", border: "1px solid var(--border)", borderRadius: 8, fontSize: 12 }} />
             </RadarChart>
           </ResponsiveContainer>
@@ -658,7 +669,7 @@ function DraggablePlayground() {
                     cursor={{ fill: "var(--muted)", fillOpacity: 0.4 }}
                     formatter={(v: number) => `${v}%`}
                   />
-                  <Bar dataKey="health" radius={[0, 6, 6, 0]}>
+                  <Bar dataKey="health" radius={[0, 6, 6, 0]} isAnimationActive={false}>
                     {repos.map((r) => (
                       <Cell key={r.name} fill={r.color} />
                     ))}
@@ -952,7 +963,7 @@ function Faq({ q, a }: { q: string; a: string }) {
     <details className="group rounded-xl border bg-card/60 p-4 open:bg-card open:shadow-card">
       <summary className="flex cursor-pointer items-center justify-between font-display text-sm font-semibold">
         {q}
-        <span className="text-muted-foreground transition group-open:rotate-45">+</span>
+        <span className="text-muted-foreground transition group-open:rotate-45" aria-hidden="true">+</span>
       </summary>
       <p className="mt-2 text-sm text-muted-foreground">{a}</p>
     </details>

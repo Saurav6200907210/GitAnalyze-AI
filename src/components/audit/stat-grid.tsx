@@ -26,7 +26,7 @@ export function StatGrid({ audit }: { audit: AuditResult }) {
           <Card className="glass p-5">
             <div className="flex items-center justify-between">
               <span className="text-xs uppercase tracking-wider text-muted-foreground">{s.label}</span>
-              <span className="text-muted-foreground">{s.icon}</span>
+              <span className="text-muted-foreground" aria-hidden="true">{s.icon}</span>
             </div>
             <div className="mt-3 font-display text-3xl font-bold tabular-nums">
               {s.value.toLocaleString()}

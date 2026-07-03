@@ -33,14 +33,17 @@ export function RepoList({ repos }: { repos: RepoAnalysis[] }) {
           placeholder="Filter repositories..."
           value={q}
           onChange={(e) => setQ(e.target.value)}
+          aria-label="Filter repositories"
           className="max-w-sm"
         />
-        <div className="flex gap-1">
+        <div className="flex gap-1" role="group" aria-label="Sort repositories">
           {(["health", "stars", "updated"] as const).map((s) => (
             <button
               key={s}
               onClick={() => setSort(s)}
-              className={`rounded-md px-3 py-1.5 text-xs capitalize transition-colors ${
+              aria-pressed={sort === s}
+              aria-label={`Sort by ${s}`}
+              className={`rounded-md px-3 py-1.5 text-xs capitalize transition-colors cursor-pointer ${
                 sort === s ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -100,7 +103,7 @@ function RepoCard({ analysis }: { analysis: RepoAnalysis }) {
                   rel="noreferrer"
                   className="inline-flex items-center gap-1 rounded-md bg-accent px-2 py-0.5 text-xs text-accent-foreground hover:opacity-80"
                 >
-                  Live <ExternalLink className="size-3" />
+                  Live <ExternalLink className="size-3" aria-hidden="true" />
                 </a>
               )}
             </div>
@@ -116,13 +119,13 @@ function RepoCard({ analysis }: { analysis: RepoAnalysis }) {
             </div>
             <div className="mt-3 flex items-center gap-4 text-xs text-muted-foreground">
               <span className="inline-flex items-center gap-1">
-                <Star className="size-3" /> {r.stargazers_count}
+                <Star className="size-3" aria-hidden="true" /> {r.stargazers_count}
               </span>
               <span className="inline-flex items-center gap-1">
-                <GitFork className="size-3" /> {r.forks_count}
+                <GitFork className="size-3" aria-hidden="true" /> {r.forks_count}
               </span>
               <span className="inline-flex items-center gap-1">
-                <AlertCircle className="size-3" /> {r.open_issues_count}
+                <AlertCircle className="size-3" aria-hidden="true" /> {r.open_issues_count}
               </span>
               <span>Updated {new Date(r.pushed_at).toLocaleDateString()}</span>
             </div>
@@ -135,8 +138,8 @@ function RepoCard({ analysis }: { analysis: RepoAnalysis }) {
               </div>
               <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Health</div>
             </div>
-            <CollapsibleTrigger className="rounded-md p-2 hover:bg-secondary">
-              <ChevronDown className={`size-4 transition-transform ${open ? "rotate-180" : ""}`} />
+            <CollapsibleTrigger className="rounded-md p-2 hover:bg-secondary" aria-label="Toggle repository details">
+              <ChevronDown className={`size-4 transition-transform ${open ? "rotate-180" : ""}`} aria-hidden="true" />
             </CollapsibleTrigger>
           </div>
         </div>
@@ -149,9 +152,9 @@ function RepoCard({ analysis }: { analysis: RepoAnalysis }) {
                 {analysis.breakdown.map((b) => (
                   <div key={b.label} className="flex items-center gap-2 text-sm">
                     {b.passed ? (
-                      <CheckCircle2 className="size-4 shrink-0 text-success" />
+                      <CheckCircle2 className="size-4 shrink-0 text-success" aria-hidden="true" />
                     ) : (
-                      <XCircle className="size-4 shrink-0 text-muted-foreground" />
+                      <XCircle className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
                     )}
                     <span className={b.passed ? "" : "text-muted-foreground"}>{b.label}</span>
                     <span className="ml-auto font-mono text-xs tabular-nums">
@@ -159,7 +162,7 @@ function RepoCard({ analysis }: { analysis: RepoAnalysis }) {
                     </span>
                   </div>
                 ))}
-                <Progress value={analysis.healthScore} className="mt-3" />
+                <Progress value={analysis.healthScore} className="mt-3" aria-label="Repository health progress" />
               </div>
             </div>
             <div>

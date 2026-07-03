@@ -12,7 +12,7 @@ export function CareerRoles({ roles }: { roles: CareerRole[] }) {
             <h3 className="font-display font-semibold">{r.role}</h3>
             <span className="font-display text-2xl font-bold tabular-nums">{r.score}%</span>
           </div>
-          <Progress value={r.score} className="mt-2" />
+          <Progress value={r.score} className="mt-2" aria-label={`${r.role} compatibility`} />
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             <div>
               <p className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-success">Strengths</p>
@@ -20,7 +20,7 @@ export function CareerRoles({ roles }: { roles: CareerRole[] }) {
                 <ul className="space-y-1 text-xs text-muted-foreground">
                   {r.strengths.map((s) => (
                     <li key={s} className="flex items-start gap-1.5">
-                      <CheckCircle2 className="mt-0.5 size-3 shrink-0 text-success" />
+                      <CheckCircle2 className="mt-0.5 size-3 shrink-0 text-success" aria-hidden="true" />
                       <span>{s}</span>
                     </li>
                   ))}
@@ -35,7 +35,7 @@ export function CareerRoles({ roles }: { roles: CareerRole[] }) {
                 <ul className="space-y-1 text-xs text-muted-foreground">
                   {r.gaps.map((g) => (
                     <li key={g} className="flex items-start gap-1.5">
-                      <XCircle className="mt-0.5 size-3 shrink-0 text-destructive" />
+                      <XCircle className="mt-0.5 size-3 shrink-0 text-destructive" aria-hidden="true" />
                       <span>{g}</span>
                     </li>
                   ))}

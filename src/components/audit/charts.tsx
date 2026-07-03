@@ -41,7 +41,7 @@ export function ChartsGrid({ audit }: { audit: AuditResult }) {
         <div className="mt-2 h-64">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
-              <Pie data={topLangs} dataKey="bytes" nameKey="name" innerRadius={50} outerRadius={90} paddingAngle={2}>
+              <Pie data={topLangs} dataKey="bytes" nameKey="name" innerRadius={50} outerRadius={90} paddingAngle={2} isAnimationActive={false}>
                 {topLangs.map((_, i) => (
                   <Cell key={i} fill={PALETTE[i % PALETTE.length]} />
                 ))}
@@ -70,7 +70,7 @@ export function ChartsGrid({ audit }: { audit: AuditResult }) {
               <XAxis type="number" stroke="var(--muted-foreground)" fontSize={11} />
               <YAxis type="category" dataKey="name" width={100} stroke="var(--muted-foreground)" fontSize={11} />
               <Tooltip contentStyle={tooltipStyle} />
-              <Bar dataKey="stars" fill="var(--chart-1)" radius={[0, 6, 6, 0]} />
+              <Bar dataKey="stars" fill="var(--chart-1)" radius={[0, 6, 6, 0]} isAnimationActive={false} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -86,7 +86,7 @@ export function ChartsGrid({ audit }: { audit: AuditResult }) {
               <XAxis dataKey="range" stroke="var(--muted-foreground)" fontSize={11} />
               <YAxis stroke="var(--muted-foreground)" fontSize={11} allowDecimals={false} />
               <Tooltip contentStyle={tooltipStyle} />
-              <Bar dataKey="count" fill="var(--chart-2)" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="count" fill="var(--chart-2)" radius={[6, 6, 0, 0]} isAnimationActive={false} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -118,7 +118,7 @@ export function HealthRadarCard({
             <PolarGrid stroke="var(--border)" />
             <PolarAngleAxis dataKey="axis" tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} />
             <PolarRadiusAxis angle={90} domain={[0, 100]} tick={false} axisLine={false} />
-            <Radar name="Score" dataKey="value" stroke="var(--chart-1)" fill="var(--chart-1)" fillOpacity={0.35} />
+            <Radar name="Score" dataKey="value" stroke="var(--chart-1)" fill="var(--chart-1)" fillOpacity={0.35} isAnimationActive={false} />
             <Tooltip contentStyle={tooltipStyle} />
           </RadarChart>
         </ResponsiveContainer>

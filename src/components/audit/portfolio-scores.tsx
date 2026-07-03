@@ -24,7 +24,7 @@ export function PortfolioScores({ scores }: { scores: Record<string, number> }) 
               <span className="text-sm text-muted-foreground">{LABELS[k] ?? k}</span>
               <span className="font-display text-2xl font-bold tabular-nums">{v}</span>
             </div>
-            <Progress value={v} className="mt-2" />
+            <Progress value={v} className="mt-2" aria-label={`${LABELS[k] ?? k} progress`} />
           </div>
         ))}
       </div>
