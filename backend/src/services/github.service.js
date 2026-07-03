@@ -1,5 +1,6 @@
 import axios from 'axios';
 import NodeCache from 'node-cache';
+import { createClient } from 'redis';
 import {
   aggregateLanguages,
   analyzeRepo,
@@ -11,7 +12,74 @@ import {
 } from '../utils/scoring.js';
 
 const CACHE_TTL = process.env.CACHE_TTL_SECONDS ? parseInt(process.env.CACHE_TTL_SECONDS, 10) : 3600;
-const cache = new NodeCache({ stdTTL: CACHE_TTL });
+const localCache = new NodeCache({ stdTTL: CACHE_TTL });
+
+// Setup Redis Client with fallback
+let redisClient = null;
+let useRedis = false;
+
+if (process.env.REDIS_URL || process.env.USE_REDIS === 'true') {
+  redisClient = createClient({
+    url: process.env.REDIS_URL || 'redis://localhost:6379'
+  });
+
+  redisClient.on('error', (err) => {
+    console.error('Redis client error, falling back to local memory cache:', err);
+    useRedis = false;
+  });
+
+  redisClient.on('connect', () => {
+    console.log('Connected to Redis successfully');
+    useRedis = true;
+  });
+
+  try {
+    await redisClient.connect();
+    useRedis = true;
+  } catch (err) {
+    console.error('Failed to connect to Redis, using local memory cache:', err.message);
+    useRedis = false;
+  }
+}
+
+const getCache = async (key) => {
+  if (useRedis && redisClient) {
+    try {
+      const data = await redisClient.get(key);
+      return data ? JSON.parse(data) : null;
+    } catch (err) {
+      console.error('Redis get error:', err);
+      return localCache.get(key) || null;
+    }
+  }
+  return localCache.get(key) || null;
+};
+
+const setCache = async (key, value, ttl = CACHE_TTL) => {
+  if (useRedis && redisClient) {
+    try {
+      await redisClient.set(key, JSON.stringify(value), {
+        EX: ttl
+      });
+      return;
+    } catch (err) {
+      console.error('Redis set error:', err);
+    }
+  }
+  localCache.set(key, value, ttl);
+};
+
+const delCache = async (key) => {
+  if (useRedis && redisClient) {
+    try {
+      await redisClient.del(key);
+      return;
+    } catch (err) {
+      console.error('Redis del error:', err);
+    }
+  }
+  localCache.del(key);
+};
 
 const githubApi = axios.create({
   baseURL: 'https://api.github.com'
@@ -54,13 +122,14 @@ const handleApiError = (error, defaultMessage) => {
 
 export const fetchUserProfile = async (username) => {
   const cacheKey = `profile:${username}`;
-  if (cache.has(cacheKey)) {
-    return { ...cache.get(cacheKey), cached: true };
+  const cached = await getCache(cacheKey);
+  if (cached) {
+    return { ...cached, cached: true };
   }
   try {
     const response = await githubApi.get(`/users/${username}`);
     const data = response.data;
-    cache.set(cacheKey, data);
+    await setCache(cacheKey, data);
     return { ...data, cached: false, headers: response.headers };
   } catch (error) {
     handleApiError(error, 'Failed to fetch user profile');
@@ -137,8 +206,9 @@ export const checkRateLimit = async () => {
 
 export const fetchUserAudit = async (username) => {
   const cacheKey = `audit:${username}`;
-  if (cache.has(cacheKey)) {
-    return { ...cache.get(cacheKey), cached: true };
+  const cached = await getCache(cacheKey);
+  if (cached) {
+    return { ...cached, cached: true };
   }
 
   try {
@@ -217,7 +287,7 @@ export const fetchUserAudit = async (username) => {
       fetchedAt: new Date().toISOString(),
     };
 
-    cache.set(cacheKey, auditData);
+    await setCache(cacheKey, auditData);
     return { ...auditData, cached: false };
   } catch (error) {
     console.error('fetchUserAudit error:', error);
@@ -228,16 +298,17 @@ export const fetchUserAudit = async (username) => {
 export const fetchUserRepos = async (username) => {
   // Simple proxy if frontend requests just repos directly
   const cacheKey = `repos:${username}`;
-  if (cache.has(cacheKey)) {
-    return { data: cache.get(cacheKey), cached: true };
+  const cached = await getCache(cacheKey);
+  if (cached) {
+    return { data: cached, cached: true };
   }
   const data = await fetchAllRepos(username);
-  cache.set(cacheKey, data);
+  await setCache(cacheKey, data);
   return { data, cached: false };
 }
 
-export const clearUserCache = (username) => {
-  cache.del(`profile:${username}`);
-  cache.del(`repos:${username}`);
-  cache.del(`audit:${username}`);
+export const clearUserCache = async (username) => {
+  await delCache(`profile:${username}`);
+  await delCache(`repos:${username}`);
+  await delCache(`audit:${username}`);
 };

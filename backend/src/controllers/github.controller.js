@@ -60,7 +60,7 @@ export const refreshAudit = async (req, res, next) => {
     if (!username) {
       return res.status(400).json({ success: false, message: 'Invalid username' });
     }
-    clearUserCache(username);
+    await clearUserCache(username);
     const data = await fetchUserAudit(username);
     res.json({ success: true, message: 'Cache cleared and data refreshed', data });
   } catch (error) {
