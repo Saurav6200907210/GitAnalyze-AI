@@ -1,4 +1,6 @@
 import { Link, useParams, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { toast } from "sonner";
 import { useAudit } from "@/hooks/useAudit";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -45,6 +47,7 @@ function AuditError({ error, reset }: { error: Error; reset: () => void }) {
 export default function AuditPage() {
   const { username } = useParams<{ username: string }>();
   const { data, loading, error } = useAudit(username);
+  const [refreshing, setRefreshing] = useState(false);
 
   if (error) {
     return <AuditError error={error} reset={() => window.location.reload()} />;
@@ -75,15 +78,33 @@ export default function AuditPage() {
                 <span className="hidden md:inline ml-1.5">New audit</span>
               </Link>
             </Button>
-            <Button variant="ghost" size="sm" className="h-8 px-2 sm:px-3" aria-label="Refresh data" onClick={async () => {
-              try {
-                const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
-                await fetch(`${API_BASE_URL}/api/github/refresh/${data.user.login}`, { method: 'POST' });
-              } catch(e) {}
-              window.location.reload();
-            }}>
-              <RefreshCw className="size-4" />
-              <span className="hidden md:inline ml-1.5">Refresh</span>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 px-2 sm:px-3"
+              aria-label="Refresh data"
+              disabled={refreshing}
+              onClick={async () => {
+                setRefreshing(true);
+                const toastId = toast.loading("Clearing cache and auditing fresh GitHub data...");
+                try {
+                  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+                  const response = await fetch(`${API_BASE_URL}/api/github/refresh/${data.user.login}`, { method: 'POST' });
+                  if (response.ok) {
+                    toast.success("Profile audit refreshed successfully!", { id: toastId });
+                    setTimeout(() => window.location.reload(), 800);
+                  } else {
+                    toast.error("Failed to refresh. Please try again.", { id: toastId });
+                    setRefreshing(false);
+                  }
+                } catch(e) {
+                  toast.error("Network error. Could not reach server.", { id: toastId });
+                  setRefreshing(false);
+                }
+              }}
+            >
+              <RefreshCw className={`size-4 ${refreshing ? "animate-spin" : ""}`} />
+              <span className="hidden md:inline ml-1.5">{refreshing ? "Refreshing..." : "Refresh"}</span>
             </Button>
             <PdfExportButton audit={data} />
             <ThemeToggle />
