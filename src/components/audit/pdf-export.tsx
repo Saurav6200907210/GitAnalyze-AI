@@ -29,9 +29,10 @@ export function PdfExportButton({ audit }: { audit: AuditResult }) {
   }
 
   return (
-    <Button size="sm" onClick={handle} disabled={loading} className="gap-1.5">
+    <Button size="sm" onClick={handle} disabled={loading} className="gap-1.5" aria-label="Export report as PDF">
       <Download className="size-4" />
-      {loading ? "Building..." : "Export PDF"}
+      <span className="hidden sm:inline">{loading ? "Building..." : "Export PDF"}</span>
+      {loading && <span className="inline sm:hidden">...</span>}
     </Button>
   );
 }
