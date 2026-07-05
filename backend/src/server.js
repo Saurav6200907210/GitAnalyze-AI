@@ -29,6 +29,15 @@ const limiter = rateLimit({
 app.use('/api', limiter);
 
 // Routes
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: "UP",
+    service: "GitHub Persona Backend",
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString()
+  });
+});
+
 app.use('/api/github', githubRoutes);
 
 // Error Handling Middleware
