@@ -1,0 +1,14 @@
+# https://kubernetes.io/docs/concepts/services-networking/service/
+apiVersion: v1
+kind: Service
+metadata:
+  name: radis-service
+  namespace: gitanalyze-ai
+spec:
+  selector:
+    app: radis
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 6379
+    targetPort: 6379
