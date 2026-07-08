@@ -20,13 +20,25 @@ spec:
     spec:
       containers:
         - name: backend
-          image: saurav6200/github-persona-main-backend:latest
+          image: saurav6200/gitanalyze-backend:latest
 
           ports:
             - containerPort: 5000
+
           envFrom:
             - configMapRef:
-               name: backend-config
+                name: backend-config
 
             - secretRef:
-               name: backend-secret  
+                name: backend-secret
+
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+
+          

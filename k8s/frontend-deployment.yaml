@@ -20,6 +20,6 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: saurav6200/github-persona-main-frontend:latest
+          image: saurav6200/gitanalyze-frontend:latest
           ports:
             - containerPort: 80
