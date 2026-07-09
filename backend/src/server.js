@@ -31,6 +31,11 @@ app.use(cors({
   origin: '*'
 }));
 
+app.use((req, res, next) => {
+  httpRequests.inc();
+  next();
+});
+
 // Rate Limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
