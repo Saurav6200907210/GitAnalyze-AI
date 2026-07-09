@@ -21,5 +21,15 @@ spec:
       containers:
         - name: frontend
           image: saurav6200/gitanalyze-frontend:latest
+
           ports:
             - containerPort: 80
+
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+
+            limits:
+              cpu: "250m"
+              memory: "256Mi"
