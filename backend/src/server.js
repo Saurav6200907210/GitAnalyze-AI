@@ -52,6 +52,11 @@ app.get('/health', (req, res) => {
   });
 });
 
+app.get("/metrics", async (req, res) => {
+  res.set("Content-Type", register.contentType);
+  res.end(await register.metrics());
+});
+
 app.use('/api/github', githubRoutes);
 
 // Error Handling Middleware
