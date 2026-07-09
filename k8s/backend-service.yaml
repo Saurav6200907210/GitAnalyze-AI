@@ -4,6 +4,8 @@ kind: Service
 metadata:
   name: backend-service
   namespace: gitanalyze-ai
+  labels:
+    app: backend
 
 spec:
   selector:
