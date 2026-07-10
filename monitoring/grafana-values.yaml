@@ -1,4 +1,8 @@
 grafana:
   persistence:
     enabled: true
+    type: pvc
     existingClaim: grafana-pvc
+    accessModes:
+      - ReadWriteOnce
+    size: 5Gi
