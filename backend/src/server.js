@@ -12,9 +12,8 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 
-// ==============================
+
 // Prometheus Metrics
-// ==============================
 
 const register = new client.Registry();
 
@@ -29,9 +28,9 @@ const httpRequests = new client.Counter({
 
 register.registerMetric(httpRequests);
 
-// ==============================
+
 // Middleware
-// ==============================
+
 
 app.use(express.json());
 
@@ -45,9 +44,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// ==============================
 // Rate Limiting
-// ==============================
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -60,9 +57,7 @@ const limiter = rateLimit({
 
 app.use('/api', limiter);
 
-// ==============================
 // Health Check
-// ==============================
 
 app.get('/health', (req, res) => {
   res.status(200).json({
@@ -73,30 +68,23 @@ app.get('/health', (req, res) => {
   });
 });
 
-// ==============================
 // Prometheus Metrics Endpoint
-// ==============================
 
 app.get('/metrics', async (req, res) => {
   res.setHeader('Content-Type', register.contentType);
   res.end(await register.metrics());
 });
 
-// ==============================
 // Routes
-// ==============================
 
 app.use('/api/github', githubRoutes);
 
-// ==============================
 // Error Handler
-// ==============================
 
 app.use(errorHandler);
 
-// ==============================
 // Server
-// ==============================
+
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
