@@ -1,0 +1,4 @@
+grafana:
+  persistence:
+    enabled: true
+    existingClaim: grafana-pvc
