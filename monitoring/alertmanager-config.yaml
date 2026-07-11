@@ -1,0 +1,15 @@
+global:
+  smtp_smarthost: 'smtp.gmail.com:587'
+  smtp_from: 'YOUR_GMAIL@gmail.com'
+  smtp_auth_username: 'YOUR_GMAIL@gmail.com'
+  smtp_auth_password: 'YOUR_APP_PASSWORD'
+  smtp_require_tls: true
+
+route:
+  receiver: email-alert
+
+receivers:
+- name: email-alert
+  email_configs:
+  - to: 'YOUR_GMAIL@gmail.com'
+    send_resolved: true
