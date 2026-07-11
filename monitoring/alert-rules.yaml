@@ -1,0 +1,93 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: gitanalyze-alerts
+  namespace: monitoring
+spec:
+  groups:
+  - name: gitanalyze.rules
+    rules:
+
+    # -------------------------------
+    # Backend Down
+    # -------------------------------
+    - alert: BackendDown
+      expr: up{job="backend-service"} == 0
+      for: 1m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Backend Down"
+        description: "GitAnalyze-AI backend is unreachable."
+
+    # -------------------------------
+    # High CPU Usage
+    # -------------------------------
+    - alert: HighCPUUsage
+      expr: sum(rate(container_cpu_usage_seconds_total{namespace="gitanalyze-ai",container="backend"}[5m])) > 0.7
+      for: 2m
+      labels:
+        severity: warning
+      annotations:
+        summary: "High CPU Usage"
+        description: "Backend CPU usage is above 70%."
+
+    # -------------------------------
+    # High Memory Usage
+    # -------------------------------
+    - alert: HighMemoryUsage
+      expr: sum(container_memory_working_set_bytes{namespace="gitanalyze-ai",container="backend"}) > 500000000
+      for: 2m
+      labels:
+        severity: warning
+      annotations:
+        summary: "High Memory Usage"
+        description: "Backend memory usage exceeded 500 MB."
+
+    # -------------------------------
+    # Pod Restart
+    # -------------------------------
+    - alert: PodRestarting
+      expr: increase(kube_pod_container_status_restarts_total{namespace="gitanalyze-ai"}[10m]) > 0
+      for: 2m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Pod Restart Detected"
+        description: "A backend pod restarted within the last 10 minutes."
+
+    # -------------------------------
+    # CrashLoopBackOff
+    # -------------------------------
+    - alert: CrashLoopBackOff
+      expr: kube_pod_container_status_waiting_reason{namespace="gitanalyze-ai",reason="CrashLoopBackOff"} == 1
+      for: 1m
+      labels:
+        severity: critical
+      annotations:
+        summary: "CrashLoopBackOff"
+        description: "A backend pod is stuck in CrashLoopBackOff."
+
+    # -------------------------------
+    # HPA Max Replicas
+    # -------------------------------
+    - alert: HPAMaxReplicasReached
+      expr: kube_horizontalpodautoscaler_status_current_replicas{namespace="gitanalyze-ai"} >= kube_horizontalpodautoscaler_spec_max_replicas{namespace="gitanalyze-ai"}
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "HPA Max Replicas Reached"
+        description: "Backend HPA reached maximum replicas."
+
+    # -------------------------------
+    # Prometheus Target Down
+    # -------------------------------
+    - alert: TargetDown
+      expr: up == 0
+      for: 2m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Prometheus Target Down"
+        description: "One or more Prometheus scrape targets are down."
