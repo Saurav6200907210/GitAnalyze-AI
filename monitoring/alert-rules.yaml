@@ -12,29 +12,38 @@ spec:
     - name: gitanalyze.rules
       rules:
 
-        - alert: BackendDown
-          expr: up{job="backend-service"} == 0
-          for: 1m
-          labels:
-            severity: critical
-          annotations:
-            summary: "Backend Down"
-            description: "GitAnalyze-AI backend is unreachable."
+      - alert: BackendDown
+        expr: absent(up{job="backend-service"})
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Backend Down"
+          description: "GitAnalyze-AI backend is unreachable."
 
-        - alert: HighCPUUsage
-          expr: rate(process_cpu_seconds_total{job="backend-service"}[5m]) > 0.7
-          for: 2m
-          labels:
-            severity: warning
-          annotations:
-            summary: "High CPU Usage"
-            description: "CPU usage is above 70%."
+      - alert: BackendTargetDown
+        expr: up{job="backend-service"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Backend Target Down"
+          description: "Backend is being scraped but is not responding."
 
-        - alert: HighMemoryUsage
-          expr: process_resident_memory_bytes{job="backend-service"} > 500000000
-          for: 2m
-          labels:
-            severity: warning
-          annotations:
-            summary: "High Memory Usage"
-            description: "Memory usage exceeded 500 MB."
+      - alert: HighCPUUsage
+        expr: sum(rate(container_cpu_usage_seconds_total{namespace="gitanalyze-ai",container="backend"}[5m])) > 0.7
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU Usage"
+          description: "Backend CPU usage is above 70%."
+
+      - alert: HighMemoryUsage
+        expr: sum(container_memory_working_set_bytes{namespace="gitanalyze-ai",container="backend"}) > 500000000
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High Memory Usage"
+          description: "Backend memory usage exceeded 500 MB."
