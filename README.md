@@ -1,111 +1,153 @@
-# 🚀 GitAnalyze AI — GitHub Portfolio Intelligence Platform
+<div align="center">
 
-GitAnalyze AI is a professional full-stack platform designed to perform deep, actionable audits of public GitHub profiles. It grades repository health on software engineering standards, calculates an ATS-friendly readiness score, aligns developer profiles with career roles, and generates a week-by-week improvement roadmap plus downloadable PDF reports.
+# GitAnalyze AI
 
----
+### Production-Ready GitHub Portfolio Intelligence Platform
 
-## 📸 Demo Walkthrough
-
-Watch the application in action:
-
-<video src="public/git%20project%20vedio%20copy.mp4" width="100%" controls autoplay loop muted></video>
+Analyze • Audit • Score • Optimize • Monitor
 
 ---
 
-## 🖼️ Feature Screenshots
+<p align="center">
 
-### 1. Dashboard Overview
-Detailed summary of public statistics, top languages, and developer strengths.
-![Overview Dashboard](public/overview.png)
+<!-- Add Badges Here -->
 
-### 2. Repositories Audit
-Audit metrics per repository grading READMEs, licenses, workflows, and contribution signals.
-![Repositories Audit](public/repositories.png)
+![GitHub stars](https://img.shields.io/github/stars/Saurav6200907210/GitAnalyze-AI?style=for-the-badge)
 
-### 3. ATS & Portfolio Health Score
-An ATS rating calculated based on recruiters' profile filtering algorithms.
-![ATS & Health Score](public/ats%20%26health.png)
+![GitHub forks](https://img.shields.io/github/forks/Saurav6200907210/GitAnalyze-AI?style=for-the-badge)
 
-### 4. Career Role Matching
-Matching profile proficiency to developer roles like Frontend, Backend, DevOps, or ML.
-![Career Roles](public/carrier.png)
+![License](https://img.shields.io/github/license/Saurav6200907210/GitAnalyze-AI?style=for-the-badge)
 
-### 5. Company Fit Matrix
-Grading service-tier and product-tier compatibility based on open-source activity.
-![Company Fit](public/companies.png)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 
-### 6. Action Roadmap
-Week-by-week 30/60/90 day action items to systematically fix portfolio issues.
-![Roadmap Plan](public/roadmap.png)
+![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white)
 
----
+![Helm](https://img.shields.io/badge/Helm-0F1689?style=for-the-badge&logo=helm&logoColor=white)
 
-## ✨ Core Features
+![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
 
-- 📊 **ATS Portfolio Score**: Heuristic score measuring profile optimization.
-- 🩺 **Repo Health Audits**: In-depth checks on workflows, releases, READMEs, and contributors.
-- 💼 **Career Matching**: Detailed alignment percentages against major tech jobs.
-- 🏢 **Company Fit**: Analysis showing product vs. service tier hiring scores.
-- 🗺️ **30/60/90 Day Roadmap**: Concrete, phased plan generated directly from audit gaps.
-- 📄 **Dynamic PDF Export**: Browser-side PDF reports available in a single click.
-- 🔄 **Redis Cache Refresh**: Manually purge user cache in Redis to pull fresh GitHub API metrics.
+![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)
+
+![Prometheus](https://img.shields.io/badge/Prometheus-E6522C?style=for-the-badge&logo=prometheus&logoColor=white)
+
+![Grafana](https://img.shields.io/badge/Grafana-F46800?style=for-the-badge&logo=grafana&logoColor=white)
+
+![Alertmanager](https://img.shields.io/badge/Alertmanager-E6522C?style=for-the-badge)
+
+</p>
 
 ---
 
-## ⚡ Technical Highlights
+### GitAnalyze AI is a production-grade full-stack GitHub portfolio intelligence platform that analyzes public GitHub profiles, evaluates repository quality, calculates ATS readiness, recommends career paths, and demonstrates modern DevOps practices through containerization, Kubernetes orchestration, CI/CD automation, monitoring, alerting, and scalable cloud-native deployment.
 
-### 🏎️ 95+ Mobile Lighthouse Score
-By lazy-loading heavy components (Recharts, React-PDF, and dynamic playground widgets) and removing Framer-motion from the critical initial render path, the main bundle size was cut from **1.7MB** to **198KB**, making page paint instant.
-
-### 💾 Hybrid Caching Layer (Redis + Node-Cache)
-Connected a **Dockerized Redis** cache on the backend. If Redis goes offline, the server automatically falls back to an in-memory **Node-Cache** system, guaranteeing zero-downtime cache lookups.
+</div>
 
 ---
 
-## ⚙️ How to Run Locally
+# Demo
 
-### Option A: Running with Docker Compose 🐳 (Recommended)
-This spins up the Redis container automatically.
+## Application Walkthrough
 
-1. Clone the repository.
-2. Spin up Redis in the background:
-   ```bash
-   docker compose up -d
-   ```
-3. Run Backend:
-   ```bash
-   cd backend
-   npm install
-   npm run dev
-   ```
-4. Run Frontend:
-   ```bash
-   cd ..
-   npm install
-   npm run dev
-   ```
+> **GIF Placeholder**
+
+```
+/assets/demo/demo.gif
+```
 
 ---
 
-### Option B: Local Fallback (Without Docker)
-The backend will automatically fall back to using an in-memory `node-cache` if local Redis is unavailable.
+## Live Preview
 
-1. **Backend**:
-   ```bash
-   cd backend
-   npm install
-   cp .env.example .env
-   # Add your GITHUB_TOKEN inside backend/.env
-   npm run dev
-   ```
-2. **Frontend**:
-   ```bash
-   cd ..
-   npm install
-   npm run dev
-   ```
+> Coming Soon
+
+```
+Oracle Cloud Deployment
+```
 
 ---
 
-## ⭐ Support
-If you find this project useful, please drop a star on GitHub! 🌟
+# Screenshots
+
+| Home Dashboard | Repository Audit |
+|---------------|------------------|
+| Screenshot | Screenshot |
+
+| ATS Score | Career Analysis |
+|------------|----------------|
+| Screenshot | Screenshot |
+
+| Company Fit | 30/60/90 Roadmap |
+|-------------|-----------------|
+| Screenshot | Screenshot |
+
+| PDF Report | Monitoring Dashboard |
+|------------|---------------------|
+| Screenshot | Screenshot |
+
+---
+
+# Table of Contents
+
+- Overview
+- Features
+- Technology Stack
+- System Architecture
+- Application Architecture
+- DevOps Architecture
+- CI/CD Pipeline
+- Kubernetes Architecture
+- Monitoring Stack
+- DevSecOps
+- Installation
+- Local Development
+- Docker Deployment
+- Kubernetes Deployment
+- Monitoring
+- Security
+- Performance Optimizations
+- API Documentation
+- Folder Structure
+- Troubleshooting
+- Future Roadmap
+- Contributing
+- License
+
+---
+
+# Overview
+
+GitAnalyze AI is an engineering-focused GitHub portfolio intelligence platform designed to provide actionable insights for software developers.
+
+Unlike conventional GitHub analyzers that display only repository statistics, GitAnalyze AI evaluates repository quality using engineering best practices including documentation quality, repository health, contribution activity, workflow automation, licensing, technology diversity, portfolio completeness, and career alignment.
+
+The platform generates recruiter-oriented insights including:
+
+- Repository Quality Assessment
+- ATS Readiness Score
+- Developer Strength Analysis
+- Technology Distribution
+- Career Role Matching
+- Company Fit Analysis
+- Portfolio Improvement Suggestions
+- 30 / 60 / 90 Day Action Roadmap
+- PDF Report Generation
+
+In addition to application-level functionality, the project demonstrates production-oriented DevOps engineering practices including Docker, Kubernetes, Helm, GitHub Actions, Horizontal Pod Autoscaling (HPA), Prometheus, Grafana, Alertmanager, Redis caching, persistent storage, and cloud-native deployment strategies.
+
+---
+
+# Project Goals
+
+The primary objective of this project is to combine Full Stack Development and Modern DevOps Engineering into a single production-ready application.
+
+The project demonstrates:
+
+- Building scalable frontend and backend services
+- Implementing containerized deployments
+- Kubernetes orchestration
+- Continuous Integration
+- Continuous Delivery
+- Monitoring
+- Alerting
+- Performance optimization
+- Cloud-native application design
