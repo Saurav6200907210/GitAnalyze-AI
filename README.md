@@ -1826,42 +1826,18 @@ The following DevSecOps features are planned for future releases.
 
 # Planned DevSecOps Pipeline
 
+
 ```mermaid
 flowchart LR
 
-Developer
-
-↓
-
-GitHub
-
-↓
-
-GitHub Actions
-
-↓
-
-Dependency Scan
-
-↓
-
-Secret Scan
-
-↓
-
-Container Scan
-
-↓
-
-Build Docker Image
-
-↓
-
-Push Image
-
-↓
-
-Deploy Kubernetes
+A[Developer] --> B[GitHub]
+B --> C[GitHub Actions]
+C --> D[Dependency Scan]
+D --> E[Secret Scan]
+E --> F[Container Scan]
+F --> G[Build Docker Image]
+G --> H[Push Image to Registry]
+H --> I[Deploy to Kubernetes]
 ```
 
 ---
