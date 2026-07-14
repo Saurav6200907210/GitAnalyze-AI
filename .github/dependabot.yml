@@ -1,1 +1,125 @@
+version: 2
 
+updates:
+  # Frontend (React)
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "04:00"
+      timezone: "Asia/Kolkata"
+
+    open-pull-requests-limit: 5
+
+    commit-message:
+      prefix: "deps(frontend)"
+      include: "scope"
+
+    labels:
+      - "dependencies"
+      - "frontend"
+      - "automated"
+
+    reviewers:
+      - "Saurav6200907210"
+
+    versioning-strategy: increase
+
+    groups:
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react*"
+
+      vite:
+        patterns:
+          - "vite"
+          - "@vitejs/*"
+
+      eslint:
+        patterns:
+          - "eslint*"
+          - "@eslint/*"
+
+      frontend-deps:
+        patterns:
+          - "*"
+
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-major"
+
+  # Backend (Node.js)
+  - package-ecosystem: "npm"
+    directory: "/backend"
+
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "04:15"
+      timezone: "Asia/Kolkata"
+
+    open-pull-requests-limit: 5
+
+    commit-message:
+      prefix: "deps(backend)"
+      include: "scope"
+
+    labels:
+      - "dependencies"
+      - "backend"
+      - "automated"
+
+    reviewers:
+      - "Saurav6200907210"
+
+    versioning-strategy: increase
+
+    groups:
+      express:
+        patterns:
+          - "express"
+
+      redis:
+        patterns:
+          - "redis"
+          - "ioredis"
+
+      database:
+        patterns:
+          - "pg"
+          - "pg-*"
+
+      monitoring:
+        patterns:
+          - "prom-client"
+
+      backend-deps:
+        patterns:
+          - "*"
+
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-major"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "04:30"
+      timezone: "Asia/Kolkata"
+
+    labels:
+      - "github-actions"
+      - "dependencies"
+
+    reviewers:
+      - "Saurav6200907210"
