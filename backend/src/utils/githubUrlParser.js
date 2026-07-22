@@ -20,6 +20,15 @@ export const extractUsername = (input) => {
   if (username.startsWith('@')) {
     username = username.substring(1);
   }
+
+  // Strict GitHub username validation:
+  // - 1 to 39 chars
+  // - alphanumeric or single hyphens between alphanumerics
+  // - no leading/trailing hyphen, no consecutive hyphens
+  const githubUsernamePattern = /^(?=.{1,39}$)(?!.*--)[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*$/;
+  if (!githubUsernamePattern.test(username)) {
+    return null;
+  }
   
   return username || null;
 };
