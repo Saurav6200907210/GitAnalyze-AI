@@ -7,7 +7,7 @@ updates:
 
     schedule:
       interval: "cron"
-      cronjob: "0 4 */2 * *"
+      cronjob: "50 6 * * *"
       timezone: "Asia/Kolkata"
 
     open-pull-requests-limit: 5
@@ -25,7 +25,7 @@ updates:
 
     schedule:
       interval: "cron"
-      cronjob: "0 4 */2 * *"
+      cronjob: "50 6 * * *"
       timezone: "Asia/Kolkata"
 
     open-pull-requests-limit: 5
@@ -43,5 +43,5 @@ updates:
 
     schedule:
       interval: "cron"
-      cronjob: "0 4 */2 * *"
+      cronjob: "50 6 * * *"
       timezone: "Asia/Kolkata"
