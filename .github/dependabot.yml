@@ -6,8 +6,7 @@ updates:
     directory: "/frontend"
 
     schedule:
-      interval: "cron"
-      cronjob: "50 6 * * *"
+      interval: "daily"
       timezone: "Asia/Kolkata"
 
     open-pull-requests-limit: 5
@@ -24,8 +23,7 @@ updates:
     directory: "/backend"
 
     schedule:
-      interval: "cron"
-      cronjob: "50 6 * * *"
+      interval: "daily"
       timezone: "Asia/Kolkata"
 
     open-pull-requests-limit: 5
@@ -42,6 +40,7 @@ updates:
     directory: "/"
 
     schedule:
-      interval: "cron"
-      cronjob: "50 6 * * *"
+      interval: "daily"
       timezone: "Asia/Kolkata"
+
+    open-pull-requests-limit: 5
