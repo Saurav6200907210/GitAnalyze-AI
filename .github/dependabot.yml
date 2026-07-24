@@ -1,9 +1,9 @@
 version: 2
 
 updates:
-  # Frontend
+  # Frontend (Vite React - Root)
   - package-ecosystem: "npm"
-    directory: "/frontend"
+    directory: "/"
 
     schedule:
       interval: "daily"
