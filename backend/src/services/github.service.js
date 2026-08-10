@@ -120,14 +120,26 @@ const handleApiError = (error, defaultMessage) => {
   throw err;
 };
 
+const sanitizeGithubUsername = (username) => {
+  const value = typeof username === 'string' ? username.trim() : '';
+  const githubUsernamePattern = /^(?=.{1,39}$)(?!.*--)[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*$/;
+  if (!githubUsernamePattern.test(value)) {
+    const err = new Error('Invalid username');
+    err.status = 400;
+    throw err;
+  }
+  return encodeURIComponent(value);
+};
+
 export const fetchUserProfile = async (username) => {
-  const cacheKey = `profile:${username}`;
+  const safeUsername = sanitizeGithubUsername(username);
+  const cacheKey = `profile:${safeUsername}`;
   const cached = await getCache(cacheKey);
   if (cached) {
     return { ...cached, cached: true };
   }
   try {
-    const response = await githubApi.get(`/users/${username}`);
+    const response = await githubApi.get(`/users/${safeUsername}`);
     const data = response.data;
     await setCache(cacheKey, data);
     return { ...data, cached: false, headers: response.headers };
@@ -137,10 +149,11 @@ export const fetchUserProfile = async (username) => {
 };
 
 export const fetchAllRepos = async (username) => {
+  const safeUsername = sanitizeGithubUsername(username);
   const out = [];
   try {
     for (let page = 1; page <= 4; page++) {
-      const response = await githubApi.get(`/users/${username}/repos?per_page=100&page=${page}&sort=updated`);
+      const response = await githubApi.get(`/users/${safeUsername}/repos?per_page=100&page=${page}&sort=updated`);
       out.push(...response.data);
       if (response.data.length < 100) break;
     }
@@ -160,8 +173,9 @@ export const fetchRepoLanguages = async (full) => {
 };
 
 export const fetchProfileReadme = async (username) => {
+  const safeUsername = sanitizeGithubUsername(username);
   try {
-    const res = await githubApi.get(`/repos/${username}/${username}/readme`);
+    const res = await githubApi.get(`/repos/${safeUsername}/${safeUsername}/readme`);
     if (!res.data || !res.data.content) return null;
     return Buffer.from(res.data.content, 'base64').toString('utf-8');
   } catch {
